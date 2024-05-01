@@ -38,10 +38,6 @@ export class Rover {
         return this.isLost;
     }
 
-    public addInstructions(instructions: string) {
-        this.instructions = instructions;
-    }
-
     private isOutOfBounds(x: number, y: number, grid: Grid) {
         return x < 0 || x > grid.x || y < 0 || y > grid.y;
     }
