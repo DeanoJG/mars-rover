@@ -125,7 +125,7 @@ export class Rover {
     }
 
     public toString() {
-        return '(' + this.x + ', ' + this.y + ', ' + this.orientation + ') ' + (this.isLost ? 'LOST' : '');
+        return '(' + this.x + ', ' + this.y + ', ' + this.orientation + ')' + (this.isLost ? ' LOST' : '');
     }
 }
 
