@@ -4,11 +4,15 @@ Date: 01/05/2024
 
 # Getting started:
 
-To start the script make sure you have node and ts-node installed on your command line. 
+Pre reqs:
+- Node v18
+- Yarn
 
-Then run:
+## Get it running:
+1. `nvm use`
+2. `yarn install`
+3. `yarn start:dev`
 
-`ts-node index.ts`
 
 # Notes and Improvements:
 1. I was short for time so I took the `question.ts` code from an answer to this [Stackoverflow question](https://stackoverflow.com/questions/33858763/console-input-in-typescript) and modified it. This code is used to provide command line prompts - this is not something that I've done before with Typescript. I do not claim to have written that part but the rest of the code is mine.
