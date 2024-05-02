@@ -6,33 +6,35 @@ describe("Rover", () => {
         expect(rover).toBeDefined();
     });
 
-    it("instruction 'L' should turn the rover left", () => {
-        const rover = new Rover(0, 0, "N", "L");
-        rover.executeInstructions(new Grid(0, 0));
-        expect(rover.orientation).toBe("W");
-    });
+    describe("instructions", () => {
+        it("'L' should turn the rover left", () => {
+            const rover = new Rover(0, 0, "N", "L");
+            rover.executeInstructions(new Grid(0, 0));
+            expect(rover.orientation).toBe("W");
+        });
+    
+        it("'R' should turn the rover right", () => {
+            const rover = new Rover(0, 0, "N", "R");
+            rover.executeInstructions(new Grid(0, 0));
+            expect(rover.orientation).toBe("E");
+        });
+    
+        it("'F' should move the rover forwards", () => {
+            const rover = new Rover(0, 0, "N", "F");
+            rover.executeInstructions(new Grid(1, 1));
+            expect(rover.x).toBe(0);
+            expect(rover.y).toBe(1);
+            expect(rover.orientation).toBe("N");
+        });
 
-    it("instruction 'R' should turn the rover right", () => {
-        const rover = new Rover(0, 0, "N", "R");
-        rover.executeInstructions(new Grid(0, 0));
-        expect(rover.orientation).toBe("E");
-    });
-
-    it("instruction 'F' should move the rover forwards", () => {
-        const rover = new Rover(0, 0, "N", "F");
-        rover.executeInstructions(new Grid(1, 1));
-        expect(rover.x).toBe(0);
-        expect(rover.y).toBe(1);
-        expect(rover.orientation).toBe("N");
-    });
-
-    it("should move execute all instructions given", () => {
-        const grid = new Grid(4, 8)
-        const rover = new Rover(2, 3, "N", "FLLFR");
-        rover.executeInstructions(grid);
-        expect(rover.x).toBe(2);
-        expect(rover.y).toBe(3);
-        expect(rover.orientation).toBe("W");
+        it("should execute all instructions given", () => {
+            const grid = new Grid(4, 8)
+            const rover = new Rover(2, 3, "N", "FLLFR");
+            rover.executeInstructions(grid);
+            expect(rover.x).toBe(2);
+            expect(rover.y).toBe(3);
+            expect(rover.orientation).toBe("W");
+        });
     });
 
     it("should return a string representation of the rover", () => {
@@ -45,6 +47,13 @@ describe("Rover", () => {
         const grid = new Grid(4, 8)
         rover.executeInstructions(grid);
         expect(rover.toString()).toBe("(0, 0, S) LOST");
+    });
+
+    it("should not execute an instruction if the next position is outside the grid", () => {
+        const rover = new Rover(0, 0, "S", "F");
+        rover.executeInstructions(new Grid(0, 0));
+        expect(rover.x).toBe(0);
+        expect(rover.y).toBe(0);
     });
 
     it("should store the last valid position if it gets lost", () => {
