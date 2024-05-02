@@ -11,8 +11,29 @@ export class Grid {
     }
 
     public addRover(rover: Rover) {
+        if (!this.isSpaceEmpty(rover.x, rover.y)) {
+            return;
+        }
         this.rovers.push(rover);
     }
+
+    public isSpaceEmpty(x: number, y: number) {
+        let isEmpty = true;
+        this.rovers.forEach((rover) => {
+            if (rover.x === x && rover.y === y) {
+                isEmpty = false;
+            }
+        })
+        return isEmpty
+    }
+
+
+    public printRovers() {
+        this.rovers.forEach((rover) => {
+            console.log(rover.toString());
+        });
+    }
+
 }
 
 export class Rover {
@@ -66,7 +87,7 @@ export class Rover {
             return;
         }
 
-        if (!this.isSpaceEmpty(grid, newX, newY)) {
+        if (!grid.isSpaceEmpty(newX, newY)) {
             return;
         }
 
@@ -88,17 +109,6 @@ export class Rover {
         }
 
         this.orientation = directions[newDirectionIndex]
-    }
-
-    public isSpaceEmpty(grid: Grid, x: number, y: number) {
-        let isEmpty = true;
-        grid.rovers.forEach((rover) => {
-            if (rover.x === x && rover.y === y) {
-                isEmpty = false;
-            }
-        })
-
-        return isEmpty
     }
 
     private executeInstruction(instruction: string, grid: Grid) {
@@ -137,17 +147,10 @@ export function mars(gridX: number, gridY: number, rovers: Rover[]) {
 
     grid.rovers.forEach((rover) => {
         rover.executeInstructions(grid);
-        console.log(rover.toString());
     });
 
+    grid.printRovers();
+
+    return grid;
+
 }
-
-// const roversA = [new Rover(2, 3, 'E', 'LFRFF'), new Rover(0, 2, 'N', 'FFLFRFF')];
-// const roversB = [new Rover(2, 3, 'N', 'FLLFR'), new Rover(1, 0, 'S', 'FFRLF')];
-
-// function main() {
-//     mars(4, 8, roversA);
-//     mars(4, 8, roversB);
-// }
-
-// main();
