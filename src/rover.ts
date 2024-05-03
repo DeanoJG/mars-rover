@@ -1,99 +1,112 @@
 
 export class Grid {
-    x: number;
-    y: number;
-    rovers: Rover[];
+    rovers: Rover[][];
 
     constructor(x: number, y: number) { 
-        this.x = x;
-        this.y = y;
         this.rovers = [];
+        for (let i = 0; i < x; i++) {
+            this.rovers.push([]);
+            for (let j = 0; j < y; j++) {
+                this.rovers[i].push(null);
+            }
+        }
     }
 
-    public addRover(rover: Rover) {
-        if (!this.isSpaceEmpty(rover.x, rover.y)) {
-            return;
+    public addRover(x: number, y: number, rover: Rover) {
+        if (!this.isSpaceEmpty(x, y)) {
+            return false;
         }
-        this.rovers.push(rover);
+        this.rovers[x][y] = rover;
+
+        return true;
     }
 
     public isSpaceEmpty(x: number, y: number) {
-        let isEmpty = true;
-        this.rovers.forEach((rover) => {
-            if (rover.x === x && rover.y === y) {
-                isEmpty = false;
-            }
-        })
-        return isEmpty
+        return this.rovers[x][y] === null;        
     }
 
     public isOutOfBounds(x: number, y: number) {
-        return x < 0 || x > this.x || y < 0 || y > this.y;
+        return x < 0 || x > this.rovers.length || y < 0 || y > this.rovers[0].length;
     }
 
-
     public printRovers() {
-        this.rovers.forEach((rover) => {
-            console.log(rover.toString());
+        this.rovers.forEach((column) => {
+            column.forEach((rover) => {
+                if (rover !== null) {
+                    console.log(rover.toString(this));
+                }
+            })
         });
     }
 
+    public getRoverById(id: number) {
+        let roverFound = null;
+        this.rovers.forEach((column) => {
+            column.forEach((rover) => {              
+                if (rover !== null && rover.id === id) {
+                    roverFound = rover;
+                }
+            })
+        });
+
+        return roverFound;
+    }
+
+    public getRoverLocationById(id: number) {
+        let coordinates = [null, null];
+        this.rovers.forEach((column, i) => {
+            column.forEach((row, j) => {
+                if (row !== null && row.id === id) {
+                    coordinates = [i, j];
+                }
+            })
+        });
+
+        return coordinates;
+    }
+
+    public moveRover(x: number, y: number, newX: number, newY: number) {
+        if (this.isOutOfBounds(newX, newY)) {
+            this.rovers[x][y].loseRobot();
+            return;
+        }
+
+        if (!this.isSpaceEmpty(newX, newY)) {
+            return;
+        }
+
+        this.rovers[newX][newY] = this.rovers[x][y];
+        this.rovers[x][y] = null;
+    }
+
+    public executeInstructions(roverId: number) {
+        const rover = this.getRoverById(roverId);
+        rover.executeInstructions(this);
+        rover.instructions = '';
+    }
 }
 
 export class Rover {
-    x: number;
-    y: number;
+    id: number;
     orientation: string;
     isLost: boolean;
     instructions: string;
     
-    public constructor(x: number, y: number, orientation: string, instructions: string) {
-        this.x = x;
-        this.y = y;
+    public constructor(id: number, orientation: string, instructions: string) {
+        this.id = id;
         this.orientation = orientation;
         this.isLost = false;
         this.instructions = instructions;
     }
 
-    private loseRobot() {
+    public loseRobot() {
         this.isLost = true;
     }
 
-    public isRobotLost() {
+    private isRobotLost() {
         return this.isLost;
     }
 
-    private moveForward(grid: Grid) {
-        let newX = this.x;
-        let newY = this.y;
-
-        switch (this.orientation) {
-            case 'N':
-                newY = this.y + 1;
-                break;
-            case 'E':  
-                newX = this.x + 1;
-                break;
-            case 'S':
-                newY = this.y - 1;
-                break;
-            case 'W':
-                newX = this.x - 1;
-                break;
-        }
-
-        if (grid.isOutOfBounds(newX, newY)) {
-            this.loseRobot();
-            return;
-        }
-
-        if (!grid.isSpaceEmpty(newX, newY)) {
-            return;
-        }
-
-        this.x = newX;
-        this.y = newY;
-    }
 
     private turnRover(left: boolean) {
         const directions = ['N', 'E', 'S', 'W'];
@@ -109,6 +122,30 @@ export class Rover {
         }
 
         this.orientation = directions[newDirectionIndex]
+    }
+
+    public moveForward(grid: Grid) {
+        const [currentX, currentY] = grid.getRoverLocationById(this.id) ?? [-1, -1];
+        let newX = currentX;
+        let newY = currentY;
+
+
+        switch (this.orientation) {
+            case 'N':
+                newY += 1;
+                break;
+            case 'E':
+                newX += 1;
+                break;
+            case 'S':
+                newY -= 1;
+                break;
+            case 'W':
+                newX -= 1;
+                break;
+        }
+
+        grid.moveRover(currentX, currentY, newX, newY);
     }
 
     private executeInstruction(instruction: string, grid: Grid) {
@@ -134,23 +171,24 @@ export class Rover {
         })
     }
 
-    public toString() {
-        return '(' + this.x + ', ' + this.y + ', ' + this.orientation + ')' + (this.isLost ? ' LOST' : '');
+    public toString(grid: Grid) {
+        const [currentX, currentY] = grid.getRoverLocationById(this.id) ?? [-1, -1];
+        return '(' + currentX + ', ' + currentY + ', ' + this.orientation + ')' + (this.isLost ? ' LOST' : '');
     }
 }
 
-export function mars(gridX: number, gridY: number, rovers: Rover[]) {
+export function mars(gridX: number, gridY: number) {
     const grid = new Grid(gridX, gridY);
-    rovers.forEach((rover) => {
-        grid.addRover(rover)
-    });
 
-    grid.rovers.forEach((rover) => {
-        rover.executeInstructions(grid);
-    });
+    grid.addRover(2, 3, new Rover(1, 'N', 'FLLFR'));
+    grid.addRover(1, 0, new Rover(2, 'S', 'FFRLF'));
+
+
+    grid.executeInstructions(1);
+    grid.executeInstructions(2);
 
     grid.printRovers();
 
-    return grid;
-
 }
+
+mars(4, 8);
