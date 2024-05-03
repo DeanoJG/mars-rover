@@ -27,6 +27,10 @@ export class Grid {
         return isEmpty
     }
 
+    public isOutOfBounds(x: number, y: number) {
+        return x < 0 || x > this.x || y < 0 || y > this.y;
+    }
+
 
     public printRovers() {
         this.rovers.forEach((rover) => {
@@ -59,10 +63,6 @@ export class Rover {
         return this.isLost;
     }
 
-    private isOutOfBounds(x: number, y: number, grid: Grid) {
-        return x < 0 || x > grid.x || y < 0 || y > grid.y;
-    }
-
     private moveForward(grid: Grid) {
         let newX = this.x;
         let newY = this.y;
@@ -82,7 +82,7 @@ export class Rover {
                 break;
         }
 
-        if (this.isOutOfBounds(newX, newY, grid)) {
+        if (grid.isOutOfBounds(newX, newY)) {
             this.loseRobot();
             return;
         }
