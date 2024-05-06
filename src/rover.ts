@@ -14,6 +14,7 @@ export class Grid {
 
     public addRover(x: number, y: number, rover: Rover) {
         if (!this.isSpaceEmpty(x, y)) {
+            console.log('A rover is already in that position')
             return false;
         }
         this.rovers[x][y] = rover;
