@@ -17,6 +17,12 @@ export class Grid {
             console.log('A rover is already in that position')
             return false;
         }
+
+        if (this.isOutOfBounds(x, y)) {
+            console.log('That location is out of bounds');
+            return false;
+        }
+
         this.rovers[x][y] = rover;
 
         return true;
@@ -31,21 +37,26 @@ export class Grid {
     }
 
     public printRovers() {
+        const rovers = [];
         this.rovers.forEach((column) => {
-            column.forEach((rover) => {
-                if (rover !== null) {
-                    console.log(rover.toString(this));
+            column.forEach((space) => {
+                if (space !== null) {
+                    rovers.push(space)
                 }
             })
+        });
+
+        rovers.sort((a, b) => a.id - b.id).forEach((rover) => {
+            console.log(rover.toString(this));
         });
     }
 
     public getRoverById(id: number) {
         let roverFound = null;
         this.rovers.forEach((column) => {
-            column.forEach((rover) => {              
-                if (rover !== null && rover.id === id) {
-                    roverFound = rover;
+            column.forEach((space) => {              
+                if (space !== null && space.id === id) {
+                    roverFound = space;
                 }
             })
         });
@@ -54,10 +65,10 @@ export class Grid {
     }
 
     public getRoverLocationById(id: number) {
-        let coordinates = [null, null];
+        let coordinates = null;
         this.rovers.forEach((column, i) => {
-            column.forEach((row, j) => {
-                if (row !== null && row.id === id) {
+            column.forEach((space, j) => {
+                if (space !== null && space.id === id) {
                     coordinates = [i, j];
                 }
             })
@@ -126,7 +137,12 @@ export class Rover {
     }
 
     public moveForward(grid: Grid) {
-        const [currentX, currentY] = grid.getRoverLocationById(this.id) ?? [-1, -1];
+        const [currentX, currentY] = grid.getRoverLocationById(this.id);
+        
+        if (currentX === null || currentY === null) {
+            return;
+        }
+
         let newX = currentX;
         let newY = currentY;
 
