@@ -1,5 +1,5 @@
 import {rl, question} from './question';
-import { Rover, mars } from './rover';
+import { Rover, mars } from './Rover';
 import readline from 'readline';
 
 async function main() {
