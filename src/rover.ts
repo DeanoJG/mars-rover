@@ -12,6 +12,7 @@ export class Grid {
 
     public addRover(rover: Rover) {
         if (!this.isSpaceEmpty(rover.x, rover.y)) {
+            console.log('A rover is already in that position')
             return;
         }
         this.rovers.push(rover);
