@@ -1,110 +1,3 @@
-
-export class Grid {
-    rovers: Rover[][];
-    roverIds: number[];
-
-    constructor(x: number, y: number) {
-        this.roverIds = []; 
-        this.rovers = [];
-        for (let i = 0; i < x; i++) {
-            this.rovers.push([]);
-            for (let j = 0; j < y; j++) {
-                this.rovers[i].push(null);
-            }
-        }
-    }
-
-    public addRover(x: number, y: number, rover: Rover) {
-        if (!this.isSpaceEmpty(x, y)) {
-            console.log('A rover is already in that position')
-            return false;
-        }
-
-        if (this.isOutOfBounds(x, y)) {
-            console.log('That location is out of bounds');
-            return false;
-        }
-
-        this.rovers[x][y] = rover;
-        this.roverIds.push(rover.id);
-
-        return true;
-    }
-
-    public isSpaceEmpty(x: number, y: number) {
-        return this.rovers[x][y] === null;        
-    }
-
-    public isOutOfBounds(x: number, y: number) {
-        return x < 0 || x > this.rovers.length || y < 0 || y > this.rovers[0].length;
-    }
-
-    public printRovers() {
-        const rovers = [];
-        this.rovers.forEach((column) => {
-            column.forEach((space) => {
-                if (space !== null) {
-                    rovers.push(space)
-                }
-            })
-        });
-
-        rovers.sort((a, b) => a.id - b.id).forEach((rover) => {
-            console.log(rover.toString(this));
-        });
-    }
-
-    public getRoverById(id: number) {
-        let roverFound = null;
-        this.rovers.forEach((column) => {
-            column.forEach((space) => {              
-                if (space !== null && space.id === id) {
-                    roverFound = space;
-                }
-            })
-        });
-
-        return roverFound;
-    }
-
-    public getRoverLocationById(id: number) {
-        if (!this.roverIds.includes(id)) {
-            return null;
-        }
-
-        let coordinates = null;
-        this.rovers.forEach((column, i) => {
-            column.forEach((space, j) => {
-                if (space !== null && space.id === id) {
-                    coordinates = [i, j];
-                }
-            })
-        });
-
-        return coordinates;
-    }
-
-    public moveRover(x: number, y: number, newX: number, newY: number) {
-        if (this.isOutOfBounds(newX, newY)) {
-            this.rovers[x][y].loseRobot();
-            return;
-        }
-
-        if (!this.isSpaceEmpty(newX, newY)) {
-            return;
-        }
-
-        this.rovers[newX][newY] = this.rovers[x][y];
-        this.rovers[x][y] = null;
-    }
-
-    public executeInstructions(roverId: number) {
-        const rover = this.getRoverById(roverId);
-        rover.executeInstructions(this);
-        rover.instructions = '';
-    }
-}
-
 export class Rover {
     id: number;
     orientation: string;
@@ -118,16 +11,31 @@ export class Rover {
         this.instructions = instructions;
     }
 
-    public loseRobot() {
-        this.isLost = true;
+    public getOrientation() {
+        return this.orientation;
     }
 
-    private isRobotLost() {
+    public setOrientation(orientation: string) {
+        this.orientation = orientation;
+    }
+
+    public isRoverLost() {
         return this.isLost;
     }
 
+    public loseRover() {
+        this.isLost = true;
+    }
 
-    private turnRover(left: boolean) {
+    public getInstructions() {
+        return this.instructions;
+    }
+
+    public setInstructions(instructions: string) {
+        this.instructions = instructions;
+    }
+
+    public turnRover(left: boolean) {
         const directions = ['N', 'E', 'S', 'W'];
 
         // +4 to eliminate case of negative indexes
@@ -143,76 +51,7 @@ export class Rover {
         this.orientation = directions[newDirectionIndex]
     }
 
-    public moveForward(grid: Grid) {
-        const [currentX, currentY] = grid.getRoverLocationById(this.id);
-        
-        if (currentX === null || currentY === null) {
-            return;
-        }
-
-        let newX = currentX;
-        let newY = currentY;
-
-
-        switch (this.orientation) {
-            case 'N':
-                newY += 1;
-                break;
-            case 'E':
-                newX += 1;
-                break;
-            case 'S':
-                newY -= 1;
-                break;
-            case 'W':
-                newX -= 1;
-                break;
-        }
-
-        grid.moveRover(currentX, currentY, newX, newY);
-    }
-
-    private executeInstruction(instruction: string, grid: Grid) {
-        switch (instruction) {
-            case 'F':
-                this.moveForward(grid);
-                break;
-            case 'L':
-                this.turnRover(true);
-                break;
-            case 'R':
-                this.turnRover(false);
-                break;
-        }
-    }
-
-    public executeInstructions(grid: Grid) {
-        Array.from(this.instructions).forEach((instruction) => {
-            if (this.isRobotLost()) {
-                return;
-            }
-            this.executeInstruction(instruction, grid);
-        })
-    }
-
-    public toString(grid: Grid) {
-        const [currentX, currentY] = grid.getRoverLocationById(this.id) ?? [-1, -1];
-        return '(' + currentX + ', ' + currentY + ', ' + this.orientation + ')' + (this.isLost ? ' LOST' : '');
+    public toString(x: number, y: number) {
+        return '(' + x + ', ' + y + ', ' + this.orientation + ')' + (this.isLost ? ' LOST' : '');
     }
 }
-
-export function mars(gridX: number, gridY: number) {
-    const grid = new Grid(gridX, gridY);
-
-    grid.addRover(2, 3, new Rover(1, 'N', 'FLLFR'));
-    grid.addRover(1, 0, new Rover(2, 'S', 'FFRLF'));
-    
-    grid.roverIds.forEach((id) => {
-        grid.executeInstructions(id);
-    })
-
-    grid.printRovers();
-
-}
-
-mars(4, 8);
