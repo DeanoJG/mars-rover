@@ -1,8 +1,10 @@
 
 export class Grid {
     rovers: Rover[][];
+    roverIds: number[];
 
-    constructor(x: number, y: number) { 
+    constructor(x: number, y: number) {
+        this.roverIds = []; 
         this.rovers = [];
         for (let i = 0; i < x; i++) {
             this.rovers.push([]);
@@ -24,6 +26,7 @@ export class Grid {
         }
 
         this.rovers[x][y] = rover;
+        this.roverIds.push(rover.id);
 
         return true;
     }
@@ -65,6 +68,10 @@ export class Grid {
     }
 
     public getRoverLocationById(id: number) {
+        if (!this.roverIds.includes(id)) {
+            return null;
+        }
+
         let coordinates = null;
         this.rovers.forEach((column, i) => {
             column.forEach((space, j) => {
@@ -199,10 +206,10 @@ export function mars(gridX: number, gridY: number) {
 
     grid.addRover(2, 3, new Rover(1, 'N', 'FLLFR'));
     grid.addRover(1, 0, new Rover(2, 'S', 'FFRLF'));
-
-
-    grid.executeInstructions(1);
-    grid.executeInstructions(2);
+    
+    grid.roverIds.forEach((id) => {
+        grid.executeInstructions(id);
+    })
 
     grid.printRovers();
 
