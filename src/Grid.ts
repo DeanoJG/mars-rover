@@ -37,6 +37,10 @@ export class Grid {
         this.roverIds.push(rover.id);
     }
 
+    public roverCount() {
+        return this.roverIds.length;
+    }
+
     public isSpaceEmpty(x: number, y: number) {
         return this.rovers[x][y] === null;        
     }
@@ -111,6 +115,12 @@ export class Grid {
         })
 
         rover.setInstructions('');
+    }
+
+    public runRovers() {
+        this.roverIds.forEach((id) => {
+            this.executeRoverInstructions(id);
+        });
     }
 
     public moveRoverForward(id: number) {
