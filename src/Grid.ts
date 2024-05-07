@@ -35,7 +35,7 @@ export class Grid {
     }
 
     public isOutOfBounds(x: number, y: number) {
-        return x < 0 || x > this.rovers.length || y < 0 || y > this.rovers[0].length;
+        return x < 0 || x > (this.rovers.length - 1) || y < 0 || y > (this.rovers[0].length - 1);
     }
 
     public getRoverById(id: number) {

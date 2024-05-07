@@ -93,12 +93,12 @@ describe("Grid", () => {
         expect(grid.isSpaceEmpty(3, 4)).toBe(false);
     });
 
-    // it("isOutOfBounds should return true if the space is out of bounds", () => {
-    //     const grid = new Grid(1, 1);
-    //     expect(grid.isOutOfBounds(2, 2)).toBe(true);
-    //     expect(grid.isOutOfBounds(-1, 0)).toBe(true);
-    //     expect(grid.isOutOfBounds(0, -1)).toBe(true);
-    // });
+    it("isOutOfBounds should return true if the space is out of bounds", () => {
+        const grid = new Grid(0, 0);
+        expect(grid.isOutOfBounds(-1, 0)).toBe(true);
+        expect(grid.isOutOfBounds(0, -1)).toBe(true);
+        expect(grid.isOutOfBounds(2, 2)).toBe(true);
+    });
 
     it("isOutOfBounds should return false if the space is within bounds", () => {
         const grid = new Grid(4, 8);
@@ -124,10 +124,10 @@ describe("Grid", () => {
         expect(grid.getRoverByLocation(0, 0)).toBe(rover);
     });
 
-    // it("getRoverByLocation should return null if the location is out of bounds", () => {
-    //     const grid = new Grid(1, 1);
-    //     expect(grid.getRoverByLocation(2, 2)).toBe(null);
-    // });
+    it("getRoverByLocation should return null if the location is out of bounds", () => {
+        const grid = new Grid(1, 1);
+        expect(grid.getRoverByLocation(2, 2)).toBe(null);
+    });
 
     it("getRoverByLocation should return null if the location is empty", () => {
         const grid = new Grid(1, 1);
@@ -155,14 +155,14 @@ describe("Grid", () => {
         expect(grid.rovers[0][1]).toBe(rover);
     });
 
-    // it("moveRover should change rover to lost if its moved out of bounds", () => {
-    //     const grid = new Grid(2, 2);
-    //     const rover = new Rover(1, "N", "F");
-    //     grid.addRover(2, 2, rover);
-    //     expect(rover.isRoverLost()).toBe(false);
-    //     grid.moveRover(2, 2, 2, 3);
-    //     expect(grid.rovers[1][1]).toBe(rover);
-    //     expect(rover.isRoverLost()).toBe(true);
-    // })
+    it("moveRover should change rover to lost if its moved out of bounds", () => {
+        const grid = new Grid(2, 2);
+        const rover = new Rover(1, "N", "F");
+        grid.addRover(2, 2, rover);
+        expect(rover.isRoverLost()).toBe(false);
+        grid.moveRover(2, 2, 2, 3);
+        expect(grid.rovers[2][2]).toBe(rover);
+        expect(rover.isRoverLost()).toBe(true);
+    })
 
 });
