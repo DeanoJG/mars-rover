@@ -37,3 +37,5 @@ Pre reqs:
 In the spirit of continuous improvement, I had a second stab at this over the weekend and changed my implementation to store the Rovers locations in a 2D array. I beleive that this is a better solution because we can instantly check the status of a coordinate (whether it's filled or not). In the previous iteration (currently on main branch) we were having to iterate over the array of Rovers each time we wanted to modify it's location, as this is the main function of the rover, it was a costly exercise. As the scale of the scale of the map and number of rovers grows, the time taken to iterate through to modify coordinates would increase drastically.
 
 [You can view my 2nd attempt in this PR here](https://github.com/DeanoJG/mars-rover/pull/1)
+
+It is a work in progress with lots of tests still to write for the grid class, but it's much cleaner (in my opinion) and should scale better.
