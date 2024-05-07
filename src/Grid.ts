@@ -5,8 +5,15 @@ export class Grid {
     roverIds: number[];
 
     constructor(x: number, y: number) {
+
+        if (x < 0 || y < 0) {
+            console.log('Grid dimensions must be positive');
+            return;
+        }
+
         this.roverIds = []; 
         this.rovers = [];
+
         for (let i = 0; i < x + 1; i++) {
             this.rovers.push([]);
             for (let j = 0; j < y + 1; j++) {
