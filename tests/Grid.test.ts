@@ -246,6 +246,16 @@ describe("Grid", () => {
         expect(rover.instructions).toBe("");
     });
 
+    it("executeRoverInstructions should not continue if the rover is lost", () => {
+        const grid = new Grid(2, 2);
+        const rover = new Rover(1, "N", "FFF");
+
+        grid.addRover(2, 2, rover);
+        grid.executeRoverInstructions(1);
+
+        expect(grid.getRoverLocationById(1)).toEqual([2, 2]);
+    })
+
     describe("moveRoverForward should move the rover forward", () => {
         it.each([
             ["N", 1 , 2],
@@ -265,7 +275,7 @@ describe("Grid", () => {
 
     })
 
-    describe("printRovers should print the rovers in the grid", () => {
+    it("printRovers should print the rovers in the grid (example 2)", () => {
         console.log = jest.fn();
         
         const grid = new Grid(4, 8);
@@ -281,7 +291,23 @@ describe("Grid", () => {
         expect(console.log).toHaveBeenNthCalledWith(1, "(2, 3, W)");
         expect(console.log).toHaveBeenNthCalledWith(2, "(1, 0, S) LOST");
 
+    });
 
+    it("printRovers should print the rovers in the grid (example 1)", () => {
+        console.log = jest.fn();
+        
+        const grid = new Grid(4, 8);
+        grid.addRover(2, 3, new Rover(1, 'E', 'LFRFF'));
+        grid.addRover(0, 2, new Rover(2, 'N', 'FFLFRFF'));
+
+        grid.executeRoverInstructions(1);  
+        grid.executeRoverInstructions(2);
+
+        grid.printRovers();
+
+        expect(console.log).toHaveBeenCalledTimes(2);
+        expect(console.log).toHaveBeenNthCalledWith(1, "(4, 4, E)");
+        expect(console.log).toHaveBeenNthCalledWith(2, "(0, 4, W) LOST");
 
     });
 

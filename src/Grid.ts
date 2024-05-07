@@ -107,6 +107,10 @@ export class Grid {
     public executeRoverInstructions(id: number) {
         const rover = this.getRoverById(id);
         Array.from(rover.getInstructions()).forEach((instruction) => {
+            if (rover.isRoverLost()) {
+                return;
+            }
+
             if (instruction === 'F') {
                 this.moveRoverForward(rover.id);
             } else {

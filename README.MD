@@ -20,12 +20,8 @@ Pre reqs:
 
 - `Grid` stores a 2D array signifying the grid and an array of IDs of Rovers in the simulation. The grid now keeps track of the location of the Rovers.
 - `Rover` object stores orientation (string/char), instructions (string) and whether the robot is lost (bool) and an id (int)
-- `Mars` function takes grid size and a list of rovers as input, creates the grid, adds the rovers and then executes their instructions.
 - `question.ts` has a function to ask the user a question through the CLI.
 - `index.ts` asks users to input rovers and then executes the world.
-
-# INTERVIEWER NOTE
-I haven't had time to reimplement the CLI interface with the new files, so if you run the project you will run the Mars.ts file which is setup to run one of the examples in the task.
 
 
 # Notes and Improvements:
