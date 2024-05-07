@@ -18,9 +18,8 @@ Pre reqs:
 
 # How it works:
 
-- `Grid` object keeps track of its length (int), width (int) and a list of rovers within the grid (array of `Rover` objects).
-- `Rover` object keeps track of its location in the grid (x and y coordinates stored as int), orientation (string/char), instructions (string) and whether the robot is lost (bool)
-- `Mars` function takes grid size and a list of rovers as input, creates the grid, adds the rovers and then executes their instructions.
+- `Grid` stores a 2D array signifying the grid and an array of IDs of Rovers in the simulation. The grid now keeps track of the location of the Rovers.
+- `Rover` object stores orientation (string/char), instructions (string) and whether the robot is lost (bool) and an id (int)
 - `question.ts` has a function to ask the user a question through the CLI.
 - `index.ts` asks users to input rovers and then executes the world.
 
