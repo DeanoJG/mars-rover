@@ -80,9 +80,7 @@ export class Grid {
     }
 
     public moveRover(x: number, y: number, newX: number, newY: number) {
-        console.log('***Here!')
         if (this.isOutOfBounds(newX, newY)) {
-            console.log("here!!!")
             this.rovers[x][y].loseRover();
             return;
         }
