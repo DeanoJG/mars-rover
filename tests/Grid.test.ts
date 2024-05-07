@@ -85,6 +85,27 @@ describe("Grid", () => {
         expect(grid.roverIds).not.toContain(rover2.id);
     });
 
+    it("roverCount should return the number of rovers in the grid", () => {
+        const grid = new Grid(4, 8);
+        const rover = new Rover(1, "N", "FLLFR");
+        const rover2 = new Rover(2, "N", "FLLFR");
+        const rover3 = new Rover(3, "N", "FLLFR");
+
+        expect(grid.roverCount()).toBe(0);
+
+        grid.addRover(3, 4, rover);
+
+        expect(grid.roverCount()).toBe(1);
+
+        grid.addRover(3, 5, rover2);
+
+        expect(grid.roverCount()).toBe(2);
+
+        grid.addRover(3, 6, rover3);
+
+        expect(grid.roverCount()).toBe(3);
+    });
+
     it("isSpaceEmpty should return true if the space is empty", () => {
         const grid = new Grid(4, 8);
 
