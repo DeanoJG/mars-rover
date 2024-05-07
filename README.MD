@@ -31,3 +31,9 @@ Pre reqs:
 3. If I had more time I would write a complete exhaustive list of unit tests (particularly for the `question.ts` and `index.ts` files) and then look at adding more types of tests from the testing pyramid, e.g. smoke, integration and functional/E2E tests.
 4. The program would also benefit from a GUI which shows the Rovers before and after executing their instructions.
 5. I have assumed that two or more rovers cannot be on the same coordinate. So if there is an occupied space, it will not allow the rover to move into the space, however it will continue executing the other commands. During intiation the user is also unable to add a rover to a space which is occupied and prints an error message. This behaviour should be clarified.
+
+# Iteration 2
+
+In the spirit of continuous improvement, I had a second stab at this over the weekend and changed my implementation to store the Rovers locations in a 2D array. I beleive that this is a better solution because we can instantly check the status of a coordinate (whether it's filled or not). In the previous iteration (currently on main branch) we were having to iterate over the array of Rovers each time we wanted to modify it's location, as this is the main function of the rover, it was a costly exercise. As the scale of the scale of the map and number of rovers grows, the time taken to iterate through to modify coordinates would increase drastically.
+
+[You can view my 2nd attempt in this PR here](https://github.com/DeanoJG/mars-rover/pull/1)
