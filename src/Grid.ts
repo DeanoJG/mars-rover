@@ -7,29 +7,27 @@ export class Grid {
     constructor(x: number, y: number) {
         this.roverIds = []; 
         this.rovers = [];
-        for (let i = 0; i <= x; i++) {
+        for (let i = 0; i < x + 1; i++) {
             this.rovers.push([]);
-            for (let j = 0; j <= y; j++) {
+            for (let j = 0; j < y + 1; j++) {
                 this.rovers[i].push(null);
             }
         }
     }
 
     public addRover(x: number, y: number, rover: Rover) {
-        if (!this.isSpaceEmpty(x, y)) {
-            console.log('A rover is already in that position')
-            return false;
-        }
-
         if (this.isOutOfBounds(x, y)) {
             console.log('That location is out of bounds');
-            return false;
+            return;
+        }
+
+        if (!this.isSpaceEmpty(x, y)) {
+            console.log('A rover is already in that position')
+            return;
         }
 
         this.rovers[x][y] = rover;
         this.roverIds.push(rover.id);
-
-        return true;
     }
 
     public isSpaceEmpty(x: number, y: number) {
@@ -58,6 +56,9 @@ export class Grid {
     }
 
     public getRoverByLocation(x: number, y: number) {
+        if (this.isOutOfBounds(x, y)) {
+            return null;
+        }
         return this.rovers[x][y];
     }
 
@@ -79,7 +80,9 @@ export class Grid {
     }
 
     public moveRover(x: number, y: number, newX: number, newY: number) {
+        console.log('***Here!')
         if (this.isOutOfBounds(newX, newY)) {
+            console.log("here!!!")
             this.rovers[x][y].loseRover();
             return;
         }
