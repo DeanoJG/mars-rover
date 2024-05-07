@@ -93,14 +93,6 @@ export class Grid {
         this.rovers[x][y] = null;
     }
 
-    public printRovers() {
-        this.roverIds.forEach((id) => {
-            const [x, y] = this.getRoverLocationById(id);
-            const rover = this.getRoverByLocation(x, y);
-            console.log(rover.toString(x, y));
-        });
-    }
-
     public executeRoverInstructions(id: number) {
         const rover = this.getRoverById(id);
         Array.from(rover.getInstructions()).forEach((instruction) => {
@@ -142,6 +134,14 @@ export class Grid {
         }
 
         this.moveRover(currentX, currentY, newX, newY);
+    }
+
+    public printRovers() {
+        this.roverIds.forEach((id) => {
+            const [x, y] = this.getRoverLocationById(id);
+            const rover = this.getRoverByLocation(x, y);
+            console.log(rover.toString(x, y));
+        });
     }
     
 }
