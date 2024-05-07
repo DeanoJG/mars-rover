@@ -10,42 +10,29 @@ describe("Grid", () => {
         expect(grid.roverIds).toHaveLength(0);
     });
 
+    it("should not create a new Grid if the dimensions are negative", () => {
+        console.log = jest.fn();
+        const grid = new Grid(-1, -1);
+
+        expect(grid.roverIds).toBeUndefined();
+        expect(grid.rovers).toBeUndefined();
+        expect(console.log).toHaveBeenCalledWith("Grid dimensions must be positive");
+    });
+
     describe("Grid Size", () => {
-        it("0x0", () => {
-            const grid = new Grid(0, 0);
+        it.each(
+            [
+                [0, 0],
+                [1, 1],
+                [2, 1],
+                [4, 8],
+                [8, 4]
+            ])(`should create a grid with dimensions %i x %i`, (x, y) => {
+            const grid = new Grid(x, y);
 
-            expect(grid.rovers).toHaveLength(1);
-            expect(grid.rovers[0]).toHaveLength(1);
+            expect(grid.rovers).toHaveLength(x + 1);
+            expect(grid.rovers[0]).toHaveLength(y + 1);
         });
-
-        it("1x1", () => {
-            const grid = new Grid(1, 1);
-            
-            expect(grid.rovers).toHaveLength(2);
-            expect(grid.rovers[0]).toHaveLength(2);
-        });
-
-        it("2x1", () => {
-            const grid = new Grid(2, 1);
-
-            expect(grid.rovers).toHaveLength(3);
-            expect(grid.rovers[0]).toHaveLength(2);
-        });
-
-        it("4x8", () => {
-            const grid = new Grid(4, 8);
-
-            expect(grid.rovers).toHaveLength(5);
-            expect(grid.rovers[0]).toHaveLength(9);
-        });
-
-        it("8x4", () => {
-            const grid = new Grid(8, 4);
-
-            expect(grid.rovers).toHaveLength(9);
-            expect(grid.rovers[0]).toHaveLength(5);
-        });
-
         
     });
 
@@ -239,48 +226,19 @@ describe("Grid", () => {
     });
 
     describe("moveRoverForward should move the rover forward", () => {
-        it("North", () => {
+        it.each([
+            ["N", 1 , 2],
+            ["E", 2 , 1],
+            ["S", 1 , 0],
+            ["W", 0 , 1]
+        ])(`should move the rover forward when facing %s to (%i, %i)`, (direction, newX, newY) => {
             const grid = new Grid(3, 3);
-            const rover = new Rover(1, "N", "F");
+            const rover = new Rover(1, direction, "F");
 
             grid.addRover(1, 1, rover);
             grid.moveRoverForward(1);
-
             expect(grid.rovers[1][1]).toBe(null);
-            expect(grid.rovers[1][2]).toBe(rover);
-        });
-
-        it("East", () => {
-            const grid = new Grid(3, 3);
-            const rover = new Rover(1, "E", "F");
-
-            grid.addRover(1, 1, rover);
-            grid.moveRoverForward(1);
-            
-            expect(grid.rovers[1][1]).toBe(null);
-            expect(grid.rovers[2][1]).toBe(rover);
-        });
-
-        it("South", () => {
-            const grid = new Grid(3, 3);
-            const rover = new Rover(1, "S", "F");
-
-            grid.addRover(1, 1, rover);
-            grid.moveRoverForward(1);
-
-            expect(grid.rovers[1][1]).toBe(null);
-            expect(grid.rovers[1][0]).toBe(rover);
-        });
-
-        it("West", () => {
-            const grid = new Grid(3, 3);
-            const rover = new Rover(1, "W", "F");
-
-            grid.addRover(1, 1, rover);
-            grid.moveRoverForward(1);
-
-            expect(grid.rovers[1][1]).toBe(null);
-            expect(grid.rovers[0][1]).toBe(rover);
+            expect(grid.rovers[newX][newY]).toBe(rover);
         });
 
 
